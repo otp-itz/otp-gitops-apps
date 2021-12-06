@@ -9,7 +9,7 @@ metadata:
       apps.open-cluster-management.io/github-path: 0-bootstrap/single-cluster/bootstrap.yaml
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
-  channel: ibm-cp4i-argocd/ibm-cp4i-argocd
+  channel: cloudpak/ibm-cp4i-argocd
   placement:
     placementRef:
       kind: PlacementRule

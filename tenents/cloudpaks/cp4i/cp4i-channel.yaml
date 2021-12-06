@@ -2,7 +2,7 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: Channel
 metadata:
   name: ibm-cp4i-argocd
-  namespace: ibm-cp4i-argocd
+  namespace: cloudpak 
   labels:
     app: ibm-cp4i-argocd
 spec:
