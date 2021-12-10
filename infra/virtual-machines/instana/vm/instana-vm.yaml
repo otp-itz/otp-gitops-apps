@@ -33,7 +33,7 @@ items:
           - ReadWriteMany
           resources:
             requests:
-              storage: 40Gi
+              storage: 160Gi
           volumeMode: Block    
         source:
           pvc:
@@ -52,7 +52,7 @@ items:
       spec:
         domain:
           cpu:
-            cores: 4
+            cores: 12
             sockets: 1
             threads: 1
           devices:
@@ -72,7 +72,7 @@ items:
             type: pc-q35-rhel8.4.0
           resources:
             requests:
-              memory: 8Gi
+              memory: 32Gi
         evictionStrategy: LiveMigrate
         networks:
         - name: default
