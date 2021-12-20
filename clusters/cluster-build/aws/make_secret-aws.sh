@@ -33,8 +33,10 @@ fi
 SEALED_SECRET_NAMESPACE=${SEALED_SECRET_NAMESPACE:-sealed-secrets}
 SEALED_SECRET_CONTROLLER_NAME=${SEALED_SECRET_CONTROLLER_NAME:-sealed-secrets}
 
-install_config=$(helm template install-config . -s templates/install-config.aws.yaml --set provider.sshPublickey="$SSH_PUB" --values values.yaml | sed -e '/---/d' -e '/Source/d')
+cp templates/install-config.aws.yaml templates/install-config.yaml
+install_config=$(helm template install-config . -s templates/install-config.yaml --set provider.sshPublickey="$SSH_PUB" --values values.yaml | sed -e '/---/d' -e '/Source/d')
 ENC_INST_CFG=$(echo -n "$install_config" | kubeseal --raw --name=$CLUSTER_NAME-install-config --namespace=$CLUSTER_NAME --controller-namespace $SEALED_SECRET_NAMESPACE --controller-name $SEALED_SECRET_CONTROLLER_NAME --from-file=/dev/stdin)
+rm templates/install-config.yaml
 
 # Encrypt the secret using kubeseal and private key from the cluster
 echo "Creating sealed secrets"
