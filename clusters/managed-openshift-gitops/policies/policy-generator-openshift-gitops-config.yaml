@@ -5,16 +5,7 @@ metadata:
 policyDefaults:
   namespace: policies
   placement:
-    labelSelector:
-      matchExpressions:
-        - key: vendor
-          operator: "In"
-          values:
-          - OpenShift
-        - key: local-cluster
-          operator: "NotIn"
-          values:
-          - true
+    placementRulePath: managed-clusters-placementrule.yaml
   remediationAction: enforce
 policies:
   - name: install-openshift-gitops
