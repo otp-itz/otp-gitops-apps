@@ -1,8 +1,9 @@
+---
 apiVersion: cluster.open-cluster-management.io/v1alpha1
-kind: Placement
+kind: PlacementRule
 metadata:
   name: managed-openshift-clusters
-  namespace: openshift-gitops
+  namespace: policies
 spec:
   predicates:
   - requiredClusterSelector:
@@ -13,6 +14,6 @@ spec:
           values:
           - OpenShift
         - key: local-cluster
-          operator: "NotIn"
+          operators: "NotIn"
           values:
           - true
