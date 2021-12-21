@@ -1,19 +1,19 @@
----
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: managed-openshift-clusters
   namespace: policies
 spec:
-  predicates:
-  - requiredClusterSelector:
-      labelSelector:
-        matchExpressions:
-        - key: vendor
-          operator: "In"
-          values:
-          - OpenShift
-        - key: local-cluster
-          operators: "NotIn"
-          values:
-          - true
+  clusterConditions:
+    - status: "True"
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: vendor
+        operator: "In"
+        values:
+        - OpenShift
+      - key: local-cluster
+        operators: "NotIn"
+        values:
+        - true
