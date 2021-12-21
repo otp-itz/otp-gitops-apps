@@ -16,4 +16,4 @@ spec:
       - key: local-cluster
         operator: "NotIn"
         values:
-        - true
+        - "true"
