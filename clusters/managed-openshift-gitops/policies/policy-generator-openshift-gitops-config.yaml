@@ -5,8 +5,7 @@ metadata:
 policyDefaults:
   namespace: policies
   placement:
-    clusterSelectors:
-      vendor: "OpenShift"
+    placementRulePath: ./managed-clusters-placementrule.yaml
   remediationAction: enforce
 policies:
   - name: install-openshift-gitops
