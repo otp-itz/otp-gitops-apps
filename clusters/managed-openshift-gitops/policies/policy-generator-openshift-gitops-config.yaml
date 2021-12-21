@@ -5,8 +5,16 @@ metadata:
 policyDefaults:
   namespace: policies
   placement:
-    clusterSelectors:
-      vendor: "OpenShift"
+    labelSelector:
+      matchExpressions:
+        - key: vendor
+          operator: "In"
+          values:
+          - OpenShift
+        - key: local-cluster
+          operator: "NotIn"
+          values:
+          - true
   remediationAction: enforce
 policies:
   - name: install-openshift-gitops
