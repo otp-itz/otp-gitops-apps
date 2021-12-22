@@ -24,15 +24,8 @@ compute:
         size: {{ .Values.workers.diskSize }} 
         type: {{ .Values.workers.diskType }}
       type: {{ .Values.workers.machineType }}
-networking:
-  clusterNetwork:
-  - cidr: 10.128.0.0/14
-    hostPrefix: 23
-  machineNetwork:
-  - cidr: 10.0.0.0/16
-  networkType: OpenShiftSDN
-  serviceNetwork:
-  - 172.30.0.0/16
+networking: 
+  {{- toYaml .Values.networking | nindent 2 }}
 platform:
   aws:
     region: {{ .Values.provider.region }}
