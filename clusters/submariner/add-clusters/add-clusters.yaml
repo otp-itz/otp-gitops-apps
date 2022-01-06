@@ -13,6 +13,6 @@ spec:
         imagePullPolicy: Always
         env:
         - name: CLUSTER_LIST
-          value: aws-cluster-0, aws-cluster-2
+          value: "aws-cluster-0, aws-cluster-2"
       restartPolicy: Never
   backoffLimit: 2
