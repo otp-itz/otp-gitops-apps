@@ -21,6 +21,7 @@ rules:
     - get
     - create
     - patch
+    - label
     resources:
     - managedcluster
     - managedclusterset
