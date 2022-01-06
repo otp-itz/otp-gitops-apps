@@ -1,28 +1,28 @@
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: add-clusters-to-managedclusterset-r
-rules:
-  - verbs:
-    - get
-    - create
-    - patch
-    - label
-    resources:
-    - managedcluster
-    - managedclusterset
----
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: add-clusters-managedclusterset-rb
+  name: add-clusters-rb
 subjects:
   - kind: ServiceAccount
     name: default
     namespace: openshift-gitops
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: add-clusters-to-managedclusterset-r
-
+  kind: Role
+  name: route-get
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: add-clusters-r
+  namespace: openshift-gitops
+rules:
+  - verbs:
+    - get
+    - patch
+    - label
+    - create
+    resources:
+    - routes
+    - managedclusterset
+    - managedcluster
