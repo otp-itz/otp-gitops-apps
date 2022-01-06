@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: add-clusters-to-managed-clusterset
-        image: quay.io/congxdev/add-clusters:4.8
+        image: quay.io/congxdev/managedclusterset-add-cluster:4.8
         imagePullPolicy: Always
         env:
         - name: CLUSTER_LIST
