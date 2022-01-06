@@ -6,12 +6,12 @@ metadata:
 rules:
   - verbs:
     - get
+    - create
     - patch
     - label
-    - create
     apiGroups:
     - managedcluster.openshift.io
     resources:
-    - managedclusterset
-    - managedcluster
-    - clusterset
+    - managedclusters
+    - managedclusteraddons
+    - managedclustersets
