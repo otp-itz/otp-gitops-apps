@@ -1,17 +1,4 @@
 ---
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: add-clusters-managedclusterset-rb
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: openshift-gitops
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: add-clusters-to-managedclusterset-r
----
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -25,3 +12,17 @@ rules:
     resources:
     - managedcluster
     - managedclusterset
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: add-clusters-managedclusterset-rb
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: openshift-gitops
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: add-clusters-to-managedclusterset-r
+
