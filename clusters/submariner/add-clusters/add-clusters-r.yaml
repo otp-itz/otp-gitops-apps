@@ -10,6 +10,6 @@ rules:
     - label
     - create
     resources:
-    - routes
     - managedclusterset
     - managedcluster
+    - clusterset
