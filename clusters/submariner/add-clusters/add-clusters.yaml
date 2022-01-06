@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: add-clusters-to-managed-clusterset
-        image: quay.io/langley_millard_ibm/add-clusters
+        image: quay.io/congxdev/add-clusters:4.8
         imagePullPolicy: Always
         env:
         - name: CLUSTER_LIST
