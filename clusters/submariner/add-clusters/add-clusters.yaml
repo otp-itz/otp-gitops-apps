@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: add-clusters-to-clusterset
+  name: add-clusters-to-managed-clusterset
   namespace: openshift-gitops
 spec:
   template:
