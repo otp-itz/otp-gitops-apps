@@ -9,6 +9,8 @@ rules:
     - patch
     - label
     - create
+    apiGroups:
+    - managedcluster.openshift.io
     resources:
     - managedclusterset
     - managedcluster
