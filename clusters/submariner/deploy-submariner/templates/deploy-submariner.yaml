@@ -12,6 +12,6 @@ spec:
         imagePullPolicy: Always
         env:
         - name: CLUSTER_LIST
-          value: aws-cluster-0 aws-cluster-2
+          value: {{ .Values.clusterList }}
       restartPolicy: Never
   backoffLimit: 2
