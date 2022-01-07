@@ -4,5 +4,5 @@ kind: ManagedClusterSet
 metadata:
   labels:
     app.kubernetes.io/instance: apps-cluster-add-submariner
-  name: submariner-clusterset-test
+  name: {{ .Values.name }}
 spec: {}
