@@ -14,5 +14,7 @@ spec:
         env:
         - name: CLUSTER_LIST
           value: "aws-cluster-0 aws-cluster-2"
+        - name: CLUSTER_SET
+          value: "submariner-clusterset-test"
       restartPolicy: Never
   backoffLimit: 2
