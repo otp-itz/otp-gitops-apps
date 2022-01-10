@@ -1,1 +1,3 @@
-clusterList: "aws-cluster-0 aws-cluster-2"
+clusterList: 
+   - "aws-cluster-0" 
+   - "aws-cluster-2"

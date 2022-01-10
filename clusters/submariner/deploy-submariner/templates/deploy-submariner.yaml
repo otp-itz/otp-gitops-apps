@@ -1,17 +1,11 @@
-apiVersion: batch/v1
-kind: Job
+{{- range .Values.clusterList }}
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ManagedClusterAddOn
 metadata:
-  name: deploy-submariner
-  namespace: openshift-gitops
+    name: submariner
+    namespace: {{ . }}
 spec:
-  template:
-    spec:
-      containers:
-      - name: deploy-submariner
-        image: quay.io/congxdev/otp-deploy-submariner:4.8
-        imagePullPolicy: Always
-        env:
-        - name: CLUSTER_LIST
-          value: {{ .Values.clusterList }}
-      restartPolicy: Never
-  backoffLimit: 2
+    installNamespace: submariner-operator
+---
+    {{- end }}    
+
