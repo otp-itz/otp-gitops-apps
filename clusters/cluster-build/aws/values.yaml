@@ -1,7 +1,10 @@
 cluster: aws-cluster-jp
 type: aws
 imageName: img4.8.19-x86-64-appsub
-
+clusterSet: 
+  name: "submariner-clusterset-test"
+  enabled: true
+  
 provider:
     region: ap-northeast-1
     baseDomain: ibmsbaasonaws.com
@@ -12,18 +15,18 @@ provider:
     installConfig: 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
 
 masters:
-    count: 3
-    diskIops: 4000
-    diskSize: 100
-    diskType: io1
-    machineType: m5.xlarge
+  count: 3
+  diskIops: 4000
+  diskSize: 100
+  diskType: io1
+  machineType: m5.xlarge
 
 workers:
-    count: 3
-    diskIops: 4000
-    diskSize: 100
-    diskType: io1
-    machineType: m5.xlarge
+  count: 3
+  diskIops: 4000
+  diskSize: 100
+  diskType: io1
+  machineType: m5.xlarge
 
 network:
     clusterCidr: 10.128.0.0/14
