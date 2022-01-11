@@ -1,7 +1,10 @@
 cluster: aws-cluster-au
 type: aws
 imageName: img4.8.19-x86-64-appsub
-
+clusterSet: 
+  name: "submariner-clusterset-test"
+  enabled: true
+  
 provider:
   region: ap-northeast-1
   baseDomain: ibmsbaasonaws.com
