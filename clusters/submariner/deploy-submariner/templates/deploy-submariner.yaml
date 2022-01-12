@@ -1,4 +1,4 @@
-{{- range .Values.clusterList }}
+{{- range .Values.clustersList }}
 apiVersion: addon.open-cluster-management.io/v1alpha1
 kind: ManagedClusterAddOn
 metadata:
@@ -7,5 +7,4 @@ metadata:
 spec:
     installNamespace: submariner-operator
 ---
-    {{- end }}    
-
+{{- end }}
