@@ -13,6 +13,6 @@ spec:
         imagePullPolicy: Always
         env:
           - name: CLUSTER_LIST
-            value: {{.Values.clustersList }}
+            value: "azure-cluster-shared-06"
       restartPolicy: Never
   backoffLimit: 2
