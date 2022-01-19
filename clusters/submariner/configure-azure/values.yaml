@@ -1,2 +1,3 @@
-clusterList: 
-- "azure-cluster-shared-06" 
+clustersList: 
+- azure-cluster-shared-06
+- azure-cluster-shared-5
