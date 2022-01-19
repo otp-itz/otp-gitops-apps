@@ -1,0 +1,19 @@
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: argocd-configure-azure-for-submariner
+  namespace: openshift-gitops
+spec:
+  template:
+    spec:
+      containers:
+      - name: argocd-configure-azure-for-submariner
+        image: quay.io/langley_millard_ibm/label-test  
+        imagePullPolicy: Always
+        env:
+        - name: CLUSTER_LIST
+          value: {{ .Values.clusterList }}
+      
+      restartPolicy: Never
+  backoffLimit: 2
