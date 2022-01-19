@@ -12,8 +12,7 @@ spec:
         image: quay.io/langley_millard_ibm/label-test  
         imagePullPolicy: Always
         env:
-        - name: CLUSTER_LIST
-          value: {{ .Values.clustersList }}
-      
+          - name: CLUSTER_LIST
+            value: {{ .Values.clustersList }}
       restartPolicy: Never
   backoffLimit: 2
