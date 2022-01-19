@@ -13,7 +13,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: CLUSTER_LIST
-          value: {{ .Values.clusterList }}
+          value: {{ .Values.clustersList }}
       
       restartPolicy: Never
   backoffLimit: 2
