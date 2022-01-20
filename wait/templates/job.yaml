@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: wait-job-
+  name: wait-job-{{.Values.syncWave}}
   namespace: sync-wave-demo
 spec:
   template:
     spec:
       containers:
-        - name: add-clusters-to-managed-clusterset
+        - name: wait
           image: quay.io/congxdev/wait:0.1
           imagePullPolicy: Always
       restartPolicy: Never
