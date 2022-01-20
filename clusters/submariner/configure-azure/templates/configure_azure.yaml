@@ -11,7 +11,7 @@ spec:
     imagePullPolicy: Always
     env:
       - name: CLUSTER_LIST
-        value: "azure-cluster-shared-06"
+        value: "azure-cluster-shared-07"
   restartPolicy: Never
   # backoffLimit: 2
 ---
