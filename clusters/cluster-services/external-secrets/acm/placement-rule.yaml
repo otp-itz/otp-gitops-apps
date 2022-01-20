@@ -2,7 +2,7 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: external-secrets-placement-1
-  namespace: child-cluster-services 
+  namespace: external-secrets 
   labels:
     app: external-secrets
 spec:

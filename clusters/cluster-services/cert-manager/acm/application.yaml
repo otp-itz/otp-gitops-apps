@@ -2,7 +2,7 @@ apiVersion: app.k8s.io/v1beta1
 kind: Application
 metadata:
   name: cert-manager
-  namespace: child-cluster-services
+  namespace: cert-manager
   labels:
     app: cert-manager
 spec:

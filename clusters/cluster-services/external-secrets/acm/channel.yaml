@@ -3,7 +3,7 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: Channel
 metadata:
   name: external-secrets-channel
-  namespace: child-cluster-services
+  namespace: external-secrets
 spec:
   pathname: https://github.com/otp-demo/otp-gitops-apps.git
   type: GitHub
