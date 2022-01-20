@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: argocd-configure-azure-for-submariner
+  generateName: argocd-configure-azure-for-submariner-
   namespace: openshift-gitops
 spec:
   containers:
