@@ -1,42 +1,38 @@
 apiVersion: operator.external-secrets.io/v1alpha1
 kind: OperatorConfig
 metadata:
-  annotations:
-    operator-sdk/primary-resource: /sample-external-secrets-controller
-    operator-sdk/primary-resource-type: ClusterRoleBinding.rbac.authorization.k8s.io
-  name: external-secrets 
-  namespace: external-secrets
-  generation: 1
+  name: sample
 spec:
-  nodeSelector: {}
-  imagePullSecrets: []
-  podLabels: {}
-  resources: {}
-  leaderElect: false
-  fullnameOverride: ''
+  # Default values copied from <project_dir>/helm-charts/external-secrets/values.yaml
   affinity: {}
+  extraArgs: {}
+  extraEnv: []
+  fullnameOverride: ""
+  image:
+    pullPolicy: IfNotPresent
+    repository: ghcr.io/external-secrets/external-secrets
+    tag: ""
+  imagePullSecrets: []
+  installCRDs: false
+  leaderElect: false
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  priorityClassName: ""
   prometheus:
     enabled: false
     service:
       port: 8080
-  podSecurityContext: {}
-  scopedNamespace: ''
-  extraArgs: {}
-  securityContext: {}
   rbac:
     create: true
   replicaCount: 1
-  nameOverride: ''
+  resources: {}
+  scopedNamespace: ""
+  securityContext: {}
   serviceAccount:
     annotations: {}
     create: true
-    name: ''
-  installCRDs: false
-  image:
-    pullPolicy: IfNotPresent
-    repository: ghcr.io/external-secrets/external-secrets
-    tag: ''
+    name: ""
   tolerations: []
-  extraEnv: []
-  priorityClassName: ''
-  podAnnotations: {}
