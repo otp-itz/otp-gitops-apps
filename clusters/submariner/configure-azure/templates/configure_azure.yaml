@@ -18,13 +18,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: argocd-configure-azure-for-submariner
+  name: argocd-configure-azure-for-submariner-1
   namespace: openshift-gitops
-  labels: 
-    key2: "value2"
-  annotations: {
-    "key1": "value1"
-  } 
 spec:
   template:
     spec:
