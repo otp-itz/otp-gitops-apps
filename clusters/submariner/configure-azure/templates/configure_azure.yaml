@@ -20,6 +20,9 @@ kind: Job
 metadata:
   name: argocd-configure-azure-for-submariner
   namespace: openshift-gitops
+  annotations: {
+    "key1": "value1"
+  } 
 spec:
   template:
     spec:
