@@ -13,7 +13,7 @@ spec:
       - name: CLUSTER_LIST
         value: "azure-cluster-shared-06"
   restartPolicy: Never
-  backoffLimit: 2
+  # backoffLimit: 2
 ---
 
 # apiVersion: batch/v1
