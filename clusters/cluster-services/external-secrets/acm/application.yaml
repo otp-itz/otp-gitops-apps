@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: cluster-services-external-secrets
   namespace: child-cluster-services
-  labels:
-    app: external-secrets
 spec:
   componentKinds:
   - group: apps.open-cluster-management.io
