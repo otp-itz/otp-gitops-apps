@@ -2,7 +2,7 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Channel
 metadata:
-  name: cluster-service-cert-manager-channel
+  name: cert-manager-channel
   namespace: child-cluster-services
 spec:
   pathname: https://github.com/otp-demo/otp-gitops-apps.git
