@@ -5,14 +5,31 @@ metadata:
   name: argocd-configure-azure-for-submariner
   namespace: openshift-gitops
 spec:
-  template:
-    spec:
-      containers:
-      - name: argocd-configure-azure-for-submariner
-        image: quay.io/langley_millard_ibm/label-test  
-        imagePullPolicy: Always
-        env:
-          - name: CLUSTER_LIST
-            value: "azure-cluster-shared-06"
-      restartPolicy: Never
+  containers:
+  - name: argocd-configure-azure-for-submariner
+    image: quay.io/langley_millard_ibm/label-test  
+    imagePullPolicy: Always
+    env:
+      - name: CLUSTER_LIST
+        value: "azure-cluster-shared-06"
+  restartPolicy: Never
   backoffLimit: 2
+---
+
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: argocd-configure-azure-for-submariner
+#   namespace: openshift-gitops
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: argocd-configure-azure-for-submariner
+#         image: quay.io/langley_millard_ibm/label-test  
+#         imagePullPolicy: Always
+#         env:
+#           - name: CLUSTER_LIST
+#             value: "azure-cluster-shared-06"
+#       restartPolicy: Never
+#   backoffLimit: 2
