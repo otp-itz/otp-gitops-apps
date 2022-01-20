@@ -41,14 +41,6 @@ vault:
             tls_client_ca_file="/etc/vault-tls/ca.crt"          
           }
 
-          seal "azurekeyvault" {
-            tenant_id      = "4e7730a0-17bb-4dfa-8dad-7c54d3e761b7"
-            client_id      = "af6f2ee3-4154-484d-8e76-fd64d4c596e8"
-            client_secret  = "Mz8ruFBo1umBkQLwcBlhXDUvPxG.~kWfgO"
-            vault_name     = "nick-vault"
-            key_name       = "hashicorp-vault-unseal-key"
-          }          
-
           storage "raft" {
             path = "/vault/data"
     
