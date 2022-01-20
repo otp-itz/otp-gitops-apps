@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: wait-job-{{.Values.syncWave}}
+  name: wait-job-{{ uuidv4 | trunc 5 | trimSuffix "-" }}
   namespace: sync-wave-demo
 spec:
   template:
