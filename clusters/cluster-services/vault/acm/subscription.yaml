@@ -1,18 +1,18 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Subscription
 metadata:
-  name: external-secrets-subscription
-  namespace: external-secrets 
+  name: vault-subscription
+  namespace: vault 
   labels:
-    app: external-secrets
+    app: vault
   annotations:
       apps.open-cluster-management.io/git-branch: master
-      apps.open-cluster-management.io/git-path: clusters/cluster-services/external-secrets/manifests/ 
+      apps.open-cluster-management.io/git-path: clusters/cluster-services/vault/manifests/ 
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
-  channel: external-secrets/external-secrets-channel
+  channel: vault/vault-channel
   placement:
     placementRef:
       kind: PlacementRule
-      name: external-secrets-placement-1
+      name: vault-placement-1
 #      apiGroup: apps.open-cluster-management.io
