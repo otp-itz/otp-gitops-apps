@@ -24,7 +24,7 @@ spec:
   template:
     spec:
       containers:
-      - generateName: argocd-configure-azure-for-submariner-
+      - name: argocd-configure-azure-for-submariner
         image: quay.io/langley_millard_ibm/label-test  
         imagePullPolicy: Always
         env:
