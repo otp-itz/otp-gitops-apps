@@ -18,13 +18,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: argocd-configure-azure-for-submariner-
+  name: argocd-configure-azure-for-submariner
   namespace: openshift-gitops
 spec:
   template:
     spec:
       containers:
-      - name: argocd-configure-azure-for-submariner
+      - generateName: argocd-configure-azure-for-submariner-
         image: quay.io/langley_millard_ibm/label-test  
         imagePullPolicy: Always
         env:
