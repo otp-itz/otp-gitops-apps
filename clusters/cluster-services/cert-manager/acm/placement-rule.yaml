@@ -13,5 +13,6 @@ spec:
     matchExpressions: []
     matchLabels:
       # Replace value with Cluster you wish to provision too.
-      name: managed-roks-1
-      name: local-cluster 
+      name: 
+      - managed-roks-1
+      - local-cluster
