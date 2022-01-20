@@ -2,4 +2,4 @@ azureClustersList:
   - azure-cluster-shared-06
   - azure-cluster-shared-07
   # - azure-cluster-shared-08
-  - azure-test-cluster
+  # - azure-test-cluster
