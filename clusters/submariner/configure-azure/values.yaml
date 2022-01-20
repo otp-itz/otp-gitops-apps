@@ -1,2 +1,3 @@
-clustersList: 
+azureClustersList: 
   - azure-cluster-shared-06
+  - azure-cluster-shared-07
