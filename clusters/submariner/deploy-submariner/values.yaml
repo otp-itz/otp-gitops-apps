@@ -2,6 +2,8 @@ clustersList:
 - aws-cluster-0
 - aws-cluster-2
 - azure-cluster-shared-06
+- azure-cluster-03
+- azure-cluster-06
 awsClustersList:
 - aws-cluster-0
 - aws-cluster-2
