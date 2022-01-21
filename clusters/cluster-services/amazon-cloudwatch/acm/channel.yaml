@@ -2,8 +2,8 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: Channel
 metadata:
-  name: anmazon-cloudwatch-channel
-  namespace: anmazon-cloudwatch
+  name: amazon-cloudwatch-channel
+  namespace: amazon-cloudwatch
 spec:
   pathname: https://github.com/otp-demo/otp-gitops-apps.git
   type: GitHub

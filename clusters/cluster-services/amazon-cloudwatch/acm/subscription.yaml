@@ -4,15 +4,15 @@ metadata:
   name: amazon-cloudwatch-subscription
   namespace: amazon-cloudwatch 
   labels:
-    app: anmazon-cloudwatch
+    app: amazon-cloudwatch
   annotations:
       apps.open-cluster-management.io/git-branch: master
       apps.open-cluster-management.io/git-path: clusters/cluster-services/amazon-cloudwatch/manifests/ 
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
-  channel: anmazon-cloudwatch/anmazon-cloudwatch-channel
+  channel: amazon-cloudwatch/amazon-cloudwatch-channel
   placement:
     placementRef:
       kind: PlacementRule
-      name: anmazon-cloudwatch-placement-1
+      name: amazon-cloudwatch-placement-1
 #      apiGroup: apps.open-cluster-management.io
