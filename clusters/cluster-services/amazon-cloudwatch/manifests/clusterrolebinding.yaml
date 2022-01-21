@@ -32,7 +32,6 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: cwagent-predeploy-job
-    namespace: amazon-cloudwatch
 roleRef:
   kind: ClusterRole
   name: cwagent-predeploy-job-role-2
