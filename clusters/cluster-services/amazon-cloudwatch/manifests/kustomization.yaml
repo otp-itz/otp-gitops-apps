@@ -10,6 +10,7 @@ resources:
   - serviceaccount.yaml
   - anyuid-rolebinding.yaml
   - job-cwagent-configmap.yaml
+  - externalsecret.yaml
 
 #use the following to update the image
 patches:
