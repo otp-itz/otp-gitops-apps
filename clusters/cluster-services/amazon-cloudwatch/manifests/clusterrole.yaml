@@ -32,5 +32,5 @@ rules:
     verbs: ["get", "list", "watch", "create"]
   - apiGroups: ["operator.open-cluster-management.io"]
     resources:
-    - klusterlet 
+    - klusterlets 
     verbs: ["get", "list", "watch"]
