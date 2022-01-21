@@ -1,10 +1,10 @@
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: aws-cloudwatch-placement-1
-  namespace: aws-cloudwatch 
+  name: anmazon-cloudwatch-placement-1
+  namespace: anmazon-cloudwatch 
   labels:
-    app: aws-cloudwatch
+    app: anmazon-cloudwatch
 spec:
   clusterConditions:
   - status: "True"
