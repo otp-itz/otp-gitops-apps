@@ -19,3 +19,14 @@ rules:
     verbs: ["get", "list", "watch"]
   - nonResourceURLs: ["/metrics"]
     verbs: ["get"]
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cwagent-predeploy-job-role
+  namespace: amazon-cloudwatch
+rules:
+  - apiGroups: [""]
+    resources:
+    - configmap 
+    verbs: ["get", "list", "watch","create"]
