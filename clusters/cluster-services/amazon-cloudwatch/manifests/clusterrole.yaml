@@ -28,5 +28,9 @@ metadata:
 rules:
   - apiGroups: [""]
     resources:
-    - configmap 
-    verbs: ["get", "list", "watch","create"]
+    - configmaps
+    verbs: ["get", "list", "watch", "create"]
+  - apiGroups: ["operator.open-cluster-management.io"]
+    resources:
+    - klusterlet 
+    verbs: ["get", "list", "watch"]

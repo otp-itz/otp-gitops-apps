@@ -11,4 +11,5 @@ spec:
           image: quay.io/nickmerrett/cloudwatch-predeploy:latest
           imagePullPolicy: Always
       restartPolicy: Never
+      serviceAccountName: cwagent-predeploy-job
   backoffLimit: 2
