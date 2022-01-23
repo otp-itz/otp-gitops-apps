@@ -16,3 +16,81 @@ spec:
       kind: PlacementRule
       name: vault-placement-1
 #      apiGroup: apps.open-cluster-management.io
+  packageOverrides:
+    - packageName: vault-values
+      packageOverrides:
+      - path: spec
+        value:
+          global_base_domain: global.ibmsbaasonaws.com
+          clusterNames:
+            - aws-cluster-shared-0
+            - aws-cluster-shared-1
+            - aws-cluster-shared-2
+          vault: 
+            server: 
+              ha: 
+                raft: 
+                  config: |-
+                    ui = true
+
+                    listener "tcp" {
+                      address = "[::]:8200"
+                      cluster_address = "[::]:8201"
+                      tls_cert_file="/etc/vault-tls/tls.crt"
+                      tls_key_file="/etc/vault-tls/tls.key"
+                      tls_client_ca_file="/etc/vault-tls/ca.crt"          
+                    }
+
+                    storage "raft" {
+                      path = "/vault/data"
+              
+                      retry_join {
+                        leader_api_addr = "https://vault-0.aws-cluster-shared-0.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }
+
+                      retry_join {
+                        leader_api_addr = "https://vault-1.aws-cluster-shared-0.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }
+
+                      retry_join {
+                        leader_api_addr = "https://vault-2.aws-cluster-shared-0.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }            
+
+                      retry_join {
+                        leader_api_addr = "https://vault-0.aws-cluster-shared-1.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }
+
+                      retry_join {
+                        leader_api_addr = "https://vault-1.aws-cluster-shared-1.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }
+
+                      retry_join {
+                        leader_api_addr = "https://vault-2.aws-cluster-shared-1.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }               
+
+                      retry_join {
+                        leader_api_addr = "https://vault-0.aws-cluster-shared-2.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }
+
+                      retry_join {
+                        leader_api_addr = "https://vault-1.aws-cluster-shared-2.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }      
+
+                      retry_join {
+                        leader_api_addr = "https://vault-2.aws-cluster-shared-2.vault-internal.vault.svc.clusterset.local:8200"
+                        leader_ca_cert_file = "/etc/vault-tls/ca.crt"
+                      }                              
+
+                    }
+
+                    log_level = "debug"
+
+                    service_registration "kubernetes" {}   

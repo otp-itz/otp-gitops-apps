@@ -107,7 +107,8 @@ spec:
                   fieldPath: metadata.name
             {{- if eq (.Values.server.multicluster.enabled | toString) "true"  }}
             - name: VAULT_CLUSTER_ADDR
-              value: "https://$(HOSTNAME).{{ .Values.server.multicluster.cluster }}.{{ template "vault.fullname" . }}-internal.$(VAULT_K8S_NAMESPACE).svc.clusterset.local:8201"            
+              #value: "https://$(HOSTNAME).{{ .Values.server.multicluster.cluster }}.{{ template "vault.fullname" . }}-internal.$(VAULT_K8S_NAMESPACE).svc.clusterset.local:8201"            
+              value: "https://$(HOSTNAME).$(CLUSTER_NAME).{{ template "vault.fullname" . }}-internal.$(VAULT_K8S_NAMESPACE).svc.clusterset.local:8201"            
             {{- else }}      
             - name: VAULT_CLUSTER_ADDR
               value: "https://$(HOSTNAME).{{ template "vault.fullname" . }}.$(VAULT_K8S_NAMESPACE).svc.cluster.local:8201"
@@ -115,7 +116,7 @@ spec:
             {{- if and (eq (.Values.server.ha.raft.enabled | toString) "true") (eq (.Values.server.ha.raft.setNodeId | toString) "true") }}
             {{- if eq (.Values.server.multicluster.enabled | toString) "true" }}
             - name: VAULT_RAFT_NODE_ID
-              value: $(HOSTNAME)-{{ .Values.server.multicluster.cluster }}
+              value: $(HOSTNAME)-$(CLUSTER_NAME)
             {{- else }}
             - name: VAULT_RAFT_NODE_ID
               value: $(HOSTNAME)
