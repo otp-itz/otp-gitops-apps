@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: {{ . }}-configuration
-        image: quay.io/langley_millard_ibm/label-test  
+        image: quay.io/langley_millard_ibm/configure-azure  
         imagePullPolicy: Always
         env:
           - name: CLUSTER_LIST
