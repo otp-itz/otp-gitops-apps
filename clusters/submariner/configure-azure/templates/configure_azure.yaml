@@ -14,7 +14,7 @@ spec:
         env:
           - name: CLUSTER_LIST
             value: {{ . }}
-      restartPolicy: Never
+      restartPolicy: OnFailure
   backoffLimit: 2
 ---
 {{- end }}
