@@ -1,6 +1,0 @@
-{{- if .Values.enableNamespace }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: sync-wave-demo
-{{- end }}
