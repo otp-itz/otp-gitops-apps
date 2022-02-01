@@ -14,7 +14,7 @@ spec:
     name: {{.}}-aws-creds
   gatewayConfig:
     aws:
-      instanceType: c5d.large
+      instanceType: m5n.large
     gateways: 1
 ---
 {{- end }}
