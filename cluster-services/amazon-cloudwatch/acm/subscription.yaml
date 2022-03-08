@@ -7,12 +7,11 @@ metadata:
     app: amazon-cloudwatch
   annotations:
       apps.open-cluster-management.io/git-branch: ${GIT_GITOPS_BRANCH} 
-      apps.open-cluster-management.io/git-path: clusters/cluster-services/amazon-cloudwatch/manifests/ 
+      apps.open-cluster-management.io/git-path: cluster-services/amazon-cloudwatch/manifests/ 
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
   channel: amazon-cloudwatch/amazon-cloudwatch-channel
   placement:
     placementRef:
       kind: PlacementRule
-      name: amazon-cloudwatch-placement-1
-#      apiGroup: apps.open-cluster-management.io
+      name: amazon-cloudwatch-placement

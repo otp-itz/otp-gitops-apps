@@ -7,7 +7,7 @@ metadata:
     app: vault
   annotations:
       apps.open-cluster-management.io/git-branch: ${GIT_GITOPS_BRANCH} 
-      apps.open-cluster-management.io/git-path: clusters/cluster-services/vault/helm/ 
+      apps.open-cluster-management.io/git-path: tenants/vault/helm/ 
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
   channel: vault/vault-channel
@@ -15,4 +15,3 @@ spec:
     placementRef:
       kind: PlacementRule
       name: vault-placement-1
-#      apiGroup: apps.open-cluster-management.io

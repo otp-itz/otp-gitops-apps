@@ -7,7 +7,7 @@ metadata:
     app: cert-manager
   annotations:
       apps.open-cluster-management.io/git-branch: ${GIT_GITOPS_BRANCH} 
-      apps.open-cluster-management.io/git-path: clusters/cluster-services/cert-manager/manifests/ 
+      apps.open-cluster-management.io/git-path: cluster-services/cert-manager/manifests/ 
       apps.open-cluster-management.io/reconcile-option: replace
 spec:
   channel: cert-manager/cert-manager-channel
