@@ -14,4 +14,3 @@ spec:
     placementRef:
       kind: PlacementRule
       name: ibm-cp4i-argocd
-#      apiGroup: apps.open-cluster-management.io
