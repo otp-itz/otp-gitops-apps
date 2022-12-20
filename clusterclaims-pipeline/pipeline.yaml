@@ -1,0 +1,117 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: clusterclaims-pipeline
+spec:
+  params:
+    - name: source-repo
+      type: string
+      description: Source code repository
+    - name: commit
+      type: string
+      description: The precise SHA of the most recent commit
+      default: ""
+    - name: cluster-claim-name
+      type: string
+      description: Name of the cluster to be claimed
+    - name: cluster-size
+      type: string
+      description: T-shirt size for the cluster [small, medium, large]
+    - name: is-self-managed
+      type: boolean
+      description: if user will be setting up and installing services themselves
+    - name: cloud-provider
+      type: string
+      description: Cloud provider to run the cluster (Azure only at the moment)
+  workspaces:
+    - name: shared-data
+      description: |
+        This workspace stores the cloned repository and is available to all steps
+  tasks:
+    - name: clone-otp-gitops
+      params:
+        - name: url
+          value: "$(params.source-repo)"
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: create-a-cluster-claim
+      taskRef:
+        kind: ClusterTask
+        # https://hub.tekton.dev/tekton/task/write-file
+        name: write-file
+      workspaces:
+        - name: output
+          workspace: shared-data
+      params:
+      - name: path
+        value: ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
+      - name: mode
+        value: "0400" # dunno what this is, need to find out
+      - name: contents
+        value: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: $(params.cloud-provider)-$(params.cluster-claim-name)
+            annotations:
+              argocd.argoproj.io/sync-wave: "360"
+            labels:
+              gitops.tier.layer: clusters
+            finalizers:
+              - resources-finalizer.argocd.argoproj.io
+          spec:
+            syncPolicy:
+              automated:
+                prune: false
+                selfHeal: true
+            destination:
+              namespace: openshift-gitops
+              server: https://kubernetes.default.svc
+            project: clusters
+            source:
+              path: clusterclaims
+              helm:
+                values: |
+                  clusterClaimName: $(params.cluster-claim-name)
+                  clusterPoolName: $(params.cloud-provider)-$(params.cluster-size)-clusterpool
+                  managedCluster: 
+                    status: "$(params.is-self-managed)"
+    - name: create-a-new-branch-and-commit
+      taskRef:
+        kind: ClusterTask
+        # https://hub.tekton.dev/tekton/task/git-cli
+        name: git-cli
+      workspaces:
+        - name: output
+          workspace: shared-data
+      params:
+      - name: GIT_SCRIPT
+        value: |
+          export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
+          git checkout -b $BRANCH
+          git add ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
+          git commit -m "⚠️ Creating a cluster claim"
+          git push --set-upstream origin $BRANCH
+    - name: open-a-pull-request
+      taskRef:
+        kind: ClusterTask
+        # https://hub.tekton.dev/tekton/task/github-open-pr
+        name: github-open-pr
+      workspaces:
+        - name: output
+          workspace: shared-data
+      params:
+      - name: REPO_FULL_NAME
+        value: otp-itz/otp-gitops
+      - name: HEAD
+        value: $(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)
+      - name: BASE
+        value: master
+      - name: TITLE
+        value: "Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]"
+      - name: BODY
+        value: "Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]"
