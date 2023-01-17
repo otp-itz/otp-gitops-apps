@@ -108,6 +108,8 @@ spec:
       - name: BASE
         value: master
       - name: TITLE
-        value: "Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]"
+        value: |
+          Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]
       - name: BODY
-        value: "Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]"
+        value: |
+          Claiming a $(params.cluster-size) on $(params.cloud-provider): $(params.cluster-claim-name) [self-managed: $(params.is-self-managed)]
