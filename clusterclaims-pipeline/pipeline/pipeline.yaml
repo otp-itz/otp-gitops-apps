@@ -13,8 +13,8 @@ spec:
     - name: cluster-size
       type: string
       description: T-shirt size for the cluster [small, medium, large]
-    - name: is-self-managed
-      type: boolean
+    - name: is-self-managed [true, false]
+      type: string
       description: if user will be setting up and installing services themselves
     - name: cloud-provider
       type: string
