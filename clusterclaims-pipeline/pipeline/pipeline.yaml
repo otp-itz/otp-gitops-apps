@@ -4,7 +4,7 @@ metadata:
   name: cluster-claimer-pipeline
 spec:
   params:
-    - default: 'https://github.com/one-touch-provisioning/otp-gitops.git'
+    - default: 'https://github.com/otp-itz/otp-gitops.git'
       description: Source code repository
       name: source-repo
       type: string
@@ -148,6 +148,15 @@ spec:
         name: github-open-pr
   workspaces:
     - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Mi
+          storageClassName: ocs-storagecluster-cephfs
+          volumeMode: Filesystem
     - name: git-cli-ssh-directory
       secret:
         secretName: otp-repo-ssh-bot-creds
