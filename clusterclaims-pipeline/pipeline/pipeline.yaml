@@ -95,9 +95,10 @@ spec:
       params:
         - name: GIT_SCRIPT
           value: |-
-            sed -i "3 i \ - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git config --global user.email "clusterclaim-service@otp.local"
             git config --global user.name "Cluster claim service"
+            sed -i "3 i \ - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
             export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
             git checkout -b $BRANCH
             git add ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
