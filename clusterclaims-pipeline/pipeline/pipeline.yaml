@@ -148,15 +148,4 @@ spec:
         name: github-open-pr
   workspaces:
     - name: shared-data
-      volumeClaimTemplate:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 10Mi
-          storageClassName: ocs-storagecluster-cephfs
-          volumeMode: Filesystem
     - name: git-cli-ssh-directory
-      secret:
-        secretName: otp-repo-ssh-bot-creds
