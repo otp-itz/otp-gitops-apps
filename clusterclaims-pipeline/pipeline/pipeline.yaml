@@ -15,11 +15,11 @@ spec:
       description: 'T-shirt size for the cluster [small, medium, large]'
       name: cluster-size
       type: string
-    - default: 'true'
+    - default: 'false'
       description: >-
-        if user will be setting up and installing services themselves  [true,
+        if Techzone will automatically provision resources as per service request instead of user ["true", "false"]
         false]
-      name: is-self-managed
+      name: will-techzone-manage-services
       type: string
     - default: azure
       description: Cloud provider to run the cluster (azure only at the moment)
@@ -78,7 +78,7 @@ spec:
                     clusterClaimName: $(params.cluster-claim-name)
                     clusterPoolName: $(params.cloud-provider)-$(params.cluster-size)-clusterpool
                     managedCluster: 
-                      status: "$(params.is-self-managed)"
+                      status: "$(params.will-techzone-manage-services)"
         - name: mode
           value: '600'
       runAfter:
@@ -135,12 +135,12 @@ spec:
           value: >-
             Claiming a $(params.cluster-size) on $(params.cloud-provider):
             $(params.cluster-claim-name) [self-managed:
-            $(params.is-self-managed)]
+            $(params.will-techzone-manage-services)]
         - name: TITLE
           value: >-
             Claiming a $(params.cluster-size) on $(params.cloud-provider):
             $(params.cluster-claim-name) [self-managed:
-            $(params.is-self-managed)]
+            $(params.will-techzone-manage-services)]
       runAfter:
         - create-a-new-branch-and-commit
       taskRef:
