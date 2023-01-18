@@ -143,6 +143,10 @@ spec:
             Claiming a $(params.cluster-size) on $(params.cloud-provider):
             $(params.cluster-claim-name) [self-managed:
             $(params.will-techzone-manage-services)]
+        - name: GITHUB_TOKEN_SECRET_NAME
+          value: otp-github-pat
+        - name: GITHUB_TOKEN_SECRET_KEY
+          value: pat
       runAfter:
         - create-a-new-branch-and-commit
       taskRef:
