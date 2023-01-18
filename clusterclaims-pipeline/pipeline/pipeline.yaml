@@ -95,7 +95,7 @@ spec:
       params:
         - name: GIT_SCRIPT
           value: |-
-            awk 'NR==24{print " - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml"}1' ./0-bootstrap/hub/4-clusters/kustomization.yaml > ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            awk 'NR==24{print \' - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml\'}1' ./0-bootstrap/hub/4-clusters/kustomization.yaml > ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git config --global user.email "clusterclaim-service@otp.local"
             git config --global user.name "Cluster claim service"
             export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
