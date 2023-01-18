@@ -113,8 +113,7 @@ spec:
         - name: source
           workspace: shared-data
         - name: ssh-directory
-          secret:
-            secretName: otp-repo-ssh-bot-creds
+          workspace: git-cli-ssh-directory
     - name: open-a-pull-request
       params:
         - name: GITHUB_HOST_URL
@@ -149,3 +148,6 @@ spec:
         name: github-open-pr
   workspaces:
     - name: shared-data
+    - name: git-cli-ssh-directory
+      secret:
+        secretName: otp-repo-ssh-bot-creds
