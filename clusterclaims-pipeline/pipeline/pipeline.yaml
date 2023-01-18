@@ -45,6 +45,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-data
+        - name: ssh-directory
+          workspace: git-cli-ssh-directory
     - name: create-a-cluster-claim
       params:
         - name: path
