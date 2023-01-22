@@ -150,28 +150,6 @@ spec:
       taskRef:
         kind: Task
         name: github-open-pr
-    - name: wait-for-cluster-to-be-ready
-      taskRef:
-        name: openshift-client
-        kind: ClusterTask
-      runAfter: open-a-pull-request
-      params:
-        - name: SCRIPT
-          value: |
-            oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cloud-provider)-$(params.cluster-claim-name) --for condition=ClusterRunning
-    # - name: deploy-storage-machinepool
-    #   when:
-    #     - input: $(params.has-storage)
-    #       operator: in
-    #       values: ["true"]
-    #   taskRef: deploy-machine-pool
-    #   params:
-    #     - name: CLUSTER_CLAIM_NAME
-    #       value: $(params.cluster-claim-name)
-    #     - name: CLUSTER_CLAIM_NAMESPACE
-    #       value: rhacm-clusterpools
-    #     - name: CLOUD_PROVIDER
-    #       value: $(params.cloud-provider)
   workspaces:
     - name: shared-data
     - name: git-cli-ssh-directory
