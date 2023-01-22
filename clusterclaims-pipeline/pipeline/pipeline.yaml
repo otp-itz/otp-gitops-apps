@@ -15,12 +15,6 @@ spec:
       description: 'T-shirt size for the cluster [small, medium, large]'
       name: cluster-size
       type: string
-    - default: 'false'
-      description: >-
-        if Techzone will automatically provision resources as per service request instead of user ["true", "false"]
-        false]
-      name: will-techzone-manage-services
-      type: string
     - default: azure
       description: Cloud provider to run the cluster (azure only at the moment)
       name: cloud-provider
@@ -80,7 +74,7 @@ spec:
                     clusterClaimName: $(params.cloud-provider)-$(params.cluster-claim-name)
                     clusterPoolName: $(params.cloud-provider)-$(params.cluster-size)-clusterpool
                     managedCluster: 
-                      status: "$(params.will-techzone-manage-services)"
+                      status: "false"
         - name: mode
           value: '600'
       runAfter:
@@ -134,13 +128,11 @@ spec:
         - name: BODY
           value: >-
             Claiming a $(params.cluster-size) on $(params.cloud-provider):
-            $(params.cluster-claim-name) [services to be installed by Techzone:
-            $(params.will-techzone-manage-services)]
+            $(params.cluster-claim-name)
         - name: TITLE
           value: >-
             Claiming a $(params.cluster-size) on $(params.cloud-provider):
-            $(params.cluster-claim-name) [services to be installed by Techzone:
-            $(params.will-techzone-manage-services)]
+            $(params.cluster-claim-name)
         - name: GITHUB_TOKEN_SECRET_NAME
           value: otp-github-pat
         - name: GITHUB_TOKEN_SECRET_KEY

@@ -10,5 +10,3 @@ spec:
     value: $(body.data.cluster_size)
   - name: cloud-provider
     value: $(body.data.cloud_provider)
-  - name: will-techzone-manage-services
-    value: $(body.data.will_techzone_manage_services)
