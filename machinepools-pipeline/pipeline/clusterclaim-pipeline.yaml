@@ -103,14 +103,14 @@ spec:
       params:
         - name: GIT_SCRIPT
           value: |-
-            git config --global user.email "clusterclaim-service@otp.local"
-            git config --global user.name "Cluster claim service"
-            sed -i "24 i \ - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            git config --global user.email "machinepool-for-clusterclaim-service@otp.local"
+            git config --global user.name "Machine pools for cluster claims service"
+            sed -i "35 i \ - argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
             export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
             git checkout -b $BRANCH
-            git add ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
-            git commit -m "⚠️ Creating a cluster claim"
+            git add ./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml
+            git commit -m "⚠️ Deploying additional storage nodes for $(params.cloud-provider)-$(params.cluster-claim-name)"
             git push --set-upstream origin $BRANCH
         - name: USER_HOME
           value: /root
@@ -141,12 +141,10 @@ spec:
           value: master
         - name: BODY
           value: >-
-            Claiming a $(params.cluster-size) on $(params.cloud-provider):
-            $(params.cluster-claim-name)
+            Creating a machine pool for $(params.cloud-provider)-$(params.cluster-claim-name)
         - name: TITLE
           value: >-
-            Claiming a $(params.cluster-size) on $(params.cloud-provider):
-            $(params.cluster-claim-name)
+            Creating a machine pool for $(params.cloud-provider)-$(params.cluster-claim-name)
         - name: GITHUB_TOKEN_SECRET_NAME
           value: otp-github-pat
         - name: GITHUB_TOKEN_SECRET_KEY
