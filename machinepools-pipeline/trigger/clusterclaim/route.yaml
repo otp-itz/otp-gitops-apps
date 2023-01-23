@@ -1,7 +1,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: machinepool-for-clusterclaim-event-listener-route
+  name: machinepool-clusterclaim
 spec:
   port:
     # targets http-listener
