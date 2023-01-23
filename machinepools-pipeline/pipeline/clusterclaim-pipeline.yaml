@@ -107,7 +107,7 @@ spec:
             git config --global user.name "Machine pools for cluster claims service"
             sed -i "35 i \ - argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
-            export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
+            export BRANCH="$(params.cloud-provider)-$(params.cluster-claim-name)-machinepool"
             git checkout -b $BRANCH
             git add ./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml
             git commit -m "⚠️ Deploying additional storage nodes for $(params.cloud-provider)-$(params.cluster-claim-name)"
@@ -136,7 +136,7 @@ spec:
           value: Bearer
         - name: HEAD
           value: >-
-            $(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)
+            $(params.cloud-provider)-$(params.cluster-claim-name)-machinepool
         - name: BASE
           value: master
         - name: BODY
