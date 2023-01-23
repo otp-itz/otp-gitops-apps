@@ -38,7 +38,7 @@ spec:
         - name: userHome
           value: /home/git
       taskRef:
-        kind: Task
+        kind: ClusterTask
         name: git-clone
       workspaces:
         - name: output
@@ -112,7 +112,7 @@ spec:
       runAfter:
         - get-cluster-deployment-name
       taskRef:
-        kind: Task
+        kind: ClusterTask
         name: git-cli
       workspaces:
         - name: source
