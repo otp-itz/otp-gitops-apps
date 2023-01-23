@@ -4,6 +4,10 @@ metadata:
   name: cluster-deployment-machinepool-pipeline
 spec:
   params:
+    - default: 'git@github.com:otp-itz/otp-gitops.git'
+      description: Source code repository, use the SSH method
+      name: source-repo
+      type: string
     - description: Cluster claim to deploy machine pool into
       name: cluster-claim-name
       type: string
