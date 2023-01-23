@@ -22,7 +22,8 @@ spec:
     metadata:
       generateName: cluster-claimer-pipeline-run-
     spec:
-      pipelineRef: cluster-claimer-pipeline
+      pipelineRef:
+        name: cluster-claimer-pipeline
       params:
       - name: source-repo
         value: $(tt.params.source-repo)
