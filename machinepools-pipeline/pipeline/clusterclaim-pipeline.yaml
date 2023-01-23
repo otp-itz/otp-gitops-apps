@@ -16,7 +16,6 @@ spec:
       taskRef:
         name: openshift-client
         kind: ClusterTask
-      runAfter: open-a-pull-request
       params:
         - name: SCRIPT
           value: |
@@ -42,7 +41,11 @@ spec:
           workspace: shared-data
         - name: ssh-directory
           workspace: git-cli-ssh-directory
+      runAfter:
+        - wait-for-cluster-to-be-ready
     - name: get-cluster-deployment-name
+      runAfter:
+        - clone-otp-gitops
       taskRef:
         kind: ClusterTask
         name: openshift-client
@@ -114,7 +117,7 @@ spec:
         - name: VERBOSE
           value: 'true'
       runAfter:
-        - create-a-cluster-claim
+        - get-cluster-deployment-name
       taskRef:
         kind: Task
         name: git-cli
