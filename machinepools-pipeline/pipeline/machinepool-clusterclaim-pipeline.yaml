@@ -23,7 +23,7 @@ spec:
       params:
         - name: SCRIPT
           value: |
-            oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cloud-provider)-$(params.cluster-claim-name) --for condition=ClusterRunning --timeout=2h
+            oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) --for condition=ClusterRunning --timeout=2h
     - name: clone-otp-gitops
       params:
         - name: url
