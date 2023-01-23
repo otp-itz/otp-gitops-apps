@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: cluster-deployment-machinepool-pipeline
+  name: machinepool-for-clusterclaim-pipeline
 spec:
   params:
     - default: 'git@github.com:otp-itz/otp-gitops.git'
@@ -56,25 +56,14 @@ spec:
       params:
         - name: SCRIPT
           value: |
-            export CLUSTER_CLAIM_DEPLOYMENT=$(oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cloud-provider)-$(params.cluster-claim-name) -o=jsonpath='{.spec.namespace}')
-            cat <<EOF >>./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml
+            export CLUSTER_CLAIM_DEPLOYMENT=$(oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) -o=jsonpath='{.spec.namespace}')
+            cat <<EOF >>./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cluster-claim-name)-storage.yaml
             apiVersion: argoproj.io/v1alpha1
             kind: Application
             metadata:
               name: azure-shared-cpd-cluster-machinepool
               annotations:
                 argocd.argoproj.io/sync-wave: "361"
-                "redhat-cop.redhat.io/patch": |
-                  spec:
-                    source:
-                      helm:
-                        values: |
-                          cloudProvider:
-                            name: "azure" # aws, azure, ibmcloud or vsphere
-                            managed: false # for roks, aro, rosa set to true
-                          # used in clusterDeploymentRef
-                          cloud:
-                            clusterName: {{ (lookup "hive.openshift.io/v1" "ClusterClaim" "rhacm-clusterpools" "shared-cpd-cluster").spec.namespace }}
               labels:
                 gitops.tier.layer: clusters
               finalizers:
@@ -94,7 +83,7 @@ spec:
                 helm:
                   values: |
                     cloudProvider:
-                      name: "azure" # aws, azure, ibmcloud or vsphere
+                      name: "$(params.cloud-provider)" # aws, azure, ibmcloud or vsphere
                       managed: false # for roks, aro, rosa set to true
                     # used in clusterDeploymentRef
                     cloud:
@@ -109,12 +98,12 @@ spec:
           value: |-
             git config --global user.email "machinepool-for-clusterclaim-service@otp.local"
             git config --global user.name "Machine pools for cluster claims service"
-            sed -i "35 i \ - argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            sed -i "35 i \ - argocd/cluster-machinepools/$(params.cluster-claim-name)-storage.yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
-            export BRANCH="$(params.cloud-provider)-$(params.cluster-claim-name)-machinepool"
+            export BRANCH="machinepool/$(params.cloud-provider)-$(params.cluster-claim-name)"
             git checkout -b $BRANCH
-            git add ./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml
-            git commit -m "⚠️ Deploying additional storage nodes for $(params.cloud-provider)-$(params.cluster-claim-name)"
+            git add ./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cluster-claim-name)-storage.yaml
+            git commit -m "⚠️ Deploying additional storage nodes for $(params.cluster-claim-name) on $(params.cloud-provider)"
             git push --set-upstream origin $BRANCH
         - name: USER_HOME
           value: /root
@@ -140,15 +129,15 @@ spec:
           value: Bearer
         - name: HEAD
           value: >-
-            $(params.cloud-provider)-$(params.cluster-claim-name)-machinepool
+            machinepool/$(params.cloud-provider)-$(params.cluster-claim-name)
         - name: BASE
           value: master
         - name: BODY
           value: >-
-            Creating a machine pool for $(params.cloud-provider)-$(params.cluster-claim-name)
+            Creating a machine pool for $(params.cluster-claim-name) on $(params.cloud-provider)
         - name: TITLE
           value: >-
-            Creating a machine pool for $(params.cloud-provider)-$(params.cluster-claim-name)
+            Creating a machine pool for $(params.cluster-claim-name) on $(params.cloud-provider)
         - name: GITHUB_TOKEN_SECRET_NAME
           value: otp-github-pat
         - name: GITHUB_TOKEN_SECRET_KEY

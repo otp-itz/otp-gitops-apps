@@ -71,7 +71,7 @@ spec:
                 path: clusterclaims
                 helm:
                   values: |
-                    clusterClaimName: $(params.cloud-provider)-$(params.cluster-claim-name)
+                    clusterClaimName: $(params.cluster-claim-name)
                     clusterPoolName: $(params.cloud-provider)-$(params.cluster-size)-clusterpool
                     managedCluster: 
                       status: "false"
@@ -93,7 +93,7 @@ spec:
             git config --global user.name "Cluster claim service"
             sed -i "24 i \ - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
             git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
-            export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
+            export BRANCH="clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
             git checkout -b $BRANCH
             git add ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
             git commit -m "⚠️ Creating a cluster claim"
@@ -122,7 +122,7 @@ spec:
           value: Bearer
         - name: HEAD
           value: >-
-            $(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)
+            clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)
         - name: BASE
           value: master
         - name: BODY
