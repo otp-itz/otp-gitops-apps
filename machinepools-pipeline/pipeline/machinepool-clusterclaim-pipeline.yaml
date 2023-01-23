@@ -32,15 +32,6 @@ spec:
       params:
         - name: url
           value: $(params.source-repo)
-        - name: deleteExisting
-          value: 'true'
-        - name: verbose
-          value: 'true'
-        - name: gitInitImage
-          value: >-
-            gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.2
-        - name: userHome
-          value: /home/git
       taskRef:
         kind: ClusterTask
         name: git-clone
