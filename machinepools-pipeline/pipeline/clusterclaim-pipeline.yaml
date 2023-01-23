@@ -1,0 +1,160 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: cluster-deployment-machinepool-pipeline
+spec:
+  params:
+    - description: Cluster claim to deploy machine pool into
+      name: cluster-claim-name
+      type: string
+    - default: azure
+      description: Cloud provider to run the cluster (azure only at the moment)
+      name: cloud-provider
+      type: string
+  tasks:
+    - name: wait-for-cluster-to-be-ready
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      runAfter: open-a-pull-request
+      params:
+        - name: SCRIPT
+          value: |
+            oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cloud-provider)-$(params.cluster-claim-name) --for condition=ClusterRunning --timeout=2h
+    - name: clone-otp-gitops
+      params:
+        - name: url
+          value: $(params.source-repo)
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.2
+        - name: userHome
+          value: /home/git
+      taskRef:
+        kind: Task
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+        - name: ssh-directory
+          workspace: git-cli-ssh-directory
+    - name: get-cluster-deployment-name
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+      params:
+        - name: SCRIPT
+          value: |
+            export CLUSTER_CLAIM_DEPLOYMENT=$(oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cloud-provider)-$(params.cluster-claim-name) -o=jsonpath='{.spec.namespace}')
+            cat <<EOF >>./0-bootstrap/hub/4-clusters/argocd/cluster-machinepools/$(params.cloud-provider)-$(params.cluster-claim-name)-storage.yaml
+            apiVersion: argoproj.io/v1alpha1
+            kind: Application
+            metadata:
+              name: azure-shared-cpd-cluster-machinepool
+              annotations:
+                argocd.argoproj.io/sync-wave: "361"
+                "redhat-cop.redhat.io/patch": |
+                  spec:
+                    source:
+                      helm:
+                        values: |
+                          cloudProvider:
+                            name: "azure" # aws, azure, ibmcloud or vsphere
+                            managed: false # for roks, aro, rosa set to true
+                          # used in clusterDeploymentRef
+                          cloud:
+                            clusterName: {{ (lookup "hive.openshift.io/v1" "ClusterClaim" "rhacm-clusterpools" "shared-cpd-cluster").spec.namespace }}
+              labels:
+                gitops.tier.layer: clusters
+              finalizers:
+                - resources-finalizer.argocd.argoproj.io
+            spec:
+              syncPolicy:
+                automated:
+                  prune: true
+                  selfHeal: true
+              destination:
+                namespace: openshift-gitops
+                server: https://kubernetes.default.svc
+              project: clusters
+              source:
+                repoURL: https://github.com/otp-itz/otp-gitops-infra.git
+                path: machinepools
+                helm:
+                  values: |
+                    cloudProvider:
+                      name: "azure" # aws, azure, ibmcloud or vsphere
+                      managed: false # for roks, aro, rosa set to true
+                    # used in clusterDeploymentRef
+                    cloud:
+                      clusterName: $CLUSTER_CLAIM_DEPLOYMENT
+            EOF
+      workspaces:
+        - name: manifest-dir
+          workspace: shared-data
+    - name: create-a-new-branch-and-commit
+      params:
+        - name: GIT_SCRIPT
+          value: |-
+            git config --global user.email "clusterclaim-service@otp.local"
+            git config --global user.name "Cluster claim service"
+            sed -i "24 i \ - argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml" ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            git add ./0-bootstrap/hub/4-clusters/kustomization.yaml
+            export BRANCH="$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)"
+            git checkout -b $BRANCH
+            git add ./0-bootstrap/hub/4-clusters/argocd/clusterclaims/$(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name).yaml
+            git commit -m "⚠️ Creating a cluster claim"
+            git push --set-upstream origin $BRANCH
+        - name: USER_HOME
+          value: /root
+        - name: VERBOSE
+          value: 'true'
+      runAfter:
+        - create-a-cluster-claim
+      taskRef:
+        kind: Task
+        name: git-cli
+      workspaces:
+        - name: source
+          workspace: shared-data
+        - name: ssh-directory
+          workspace: git-cli-ssh-directory
+    - name: open-a-pull-request
+      params:
+        - name: GITHUB_HOST_URL
+          value: api.github.com
+        - name: REPO_FULL_NAME
+          value: otp-itz/otp-gitops
+        - name: AUTH_TYPE
+          value: Bearer
+        - name: HEAD
+          value: >-
+            $(params.cloud-provider)-$(params.cluster-size)-$(params.cluster-claim-name)
+        - name: BASE
+          value: master
+        - name: BODY
+          value: >-
+            Claiming a $(params.cluster-size) on $(params.cloud-provider):
+            $(params.cluster-claim-name)
+        - name: TITLE
+          value: >-
+            Claiming a $(params.cluster-size) on $(params.cloud-provider):
+            $(params.cluster-claim-name)
+        - name: GITHUB_TOKEN_SECRET_NAME
+          value: otp-github-pat
+        - name: GITHUB_TOKEN_SECRET_KEY
+          value: pat
+      runAfter:
+        - create-a-new-branch-and-commit
+      taskRef:
+        kind: Task
+        name: github-open-pr
+  workspaces:
+    - name: shared-data
+    - name: git-cli-ssh-directory
+
+    
