@@ -21,9 +21,17 @@ spec:
     kind: PipelineRun
     metadata:
       generateName: cluster-claimer-pipeline-run-
+      namespace: pipeline-runs
     spec:
       pipelineRef:
-        name: cluster-claimer-pipeline
+        resolver: cluster
+        params:
+        - name: name
+          value: cluster-claimer-pipeline
+        - name: namespace
+          value: cluster-claimer-service
+        - name: kind
+          value: pipeline
       params:
       - name: source-repo
         value: $(tt.params.source-repo)
