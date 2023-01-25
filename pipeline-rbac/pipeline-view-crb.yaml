@@ -6,6 +6,9 @@ subjects:
   - kind: ServiceAccount
     name: pipeline
     namespace: machinepools-pipeline
+  - kind: ServiceAccount
+    name: pipeline
+    namespace: gitops-repo-deploy-pipeline
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
