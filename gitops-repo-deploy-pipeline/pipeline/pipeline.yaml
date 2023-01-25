@@ -1,0 +1,122 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: gitops-repo-deploy-pipeline
+spec:
+  params:
+    - default: 'git@github.com:otp-itz/gitops-repo-bare.git'
+      description: Source code repository to base upon
+      name: source-repo
+      type: string
+    - description: Target code repository
+      name: target-repo
+      type: string
+    - description: Cluster claim for storage configuration
+      name: cluster-claim-name
+      type: string
+    - default: azure
+      description: Cloud provider to run the cluster (azure only at the moment)
+      name: cloud-provider
+      type: string
+  tasks:
+    - name: wait-for-cluster-to-be-ready
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      params:
+        - name: SCRIPT
+          value: |
+            until oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) >/dev/null 2>&1; do
+              echo "Waiting for cluster claim $(params.cluster-claim-name) in rhacm-clusterpools..."
+              sleep 1
+            done
+            oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) --for condition=ClusterRunning --timeout=2h
+    - name: clone-bare-gitops-repo
+      params:
+        - name: url
+          value: $(params.source-repo)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+        - name: ssh-directory
+          workspace: git-cli-ssh-directory
+    - name: set-up-storage
+      runAfter:
+        - clone-bare-gitops-repo
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+      params:
+        - name: SCRIPT
+          value: |
+            export CLUSTER_DEPLOYMENT=$(oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) -o=jsonpath='{.spec.namespace}')
+            
+            # Configure storage            
+            ocpversion=$(oc get clusterdeployments.hive.openshift.io $CLUSTER_DEPLOYMENT -n $CLUSTER_DEPLOYMENT -o=jsonpath='{.status.installVersion}')
+            a=( ${ocpversion//./ } )
+            majorVer="${a[0]}.${a[1]}"
+
+            newChannel="stable-${majorVer}"
+            defsc=$(oc get sc | grep default | awk '{print $1}')
+            if [[ "$platform" == "aws" ]]; then
+                storageClass=${defsc:-"gp2"}
+                elif [[ "$platform" == "azure" ]]; then
+                storageClass=${defsc:-"managed-premium"}
+                elif [[ "$platform" == "gcp" ]]; then
+                storageClass=${defsc:-"standard"}
+                elif [[ "$platform" == "ibmcloud" ]]; then
+                storageClass=${defsc:-"ibmc-vpc-block-10iops-tier"}
+                elif [[ "$platform" == "vsphere" ]]; then
+                storageClass=${defsc:-"thin"}
+            fi
+
+            if echo $majorVer | grep -E '4.[6-8]' > /dev/null ; then
+                storageChart="ocs-operator"
+            elif echo $majorVer | grep -E '4.9|4.[1-9][0-9]|4.[1-9][0-9][0-9]' > /dev/null ; then
+                storageChart="odf-operator"
+            fi
+
+            cd ./1-infra
+            sed -i.bak "s#\${STORAGE_CHART_NAME}#${storageChart}#" argocd/storage.yaml
+            sed -i.bak "s#\${CHANNEL}#${newChannel}#" argocd/storage.yaml
+            sed -i.bak "s#\${STORCLASS}#${storageClass}#" argocd/storage.yaml
+            rm argocd/storage.yaml.bak
+      workspaces:
+        - name: manifest-dir
+          workspace: shared-data
+    - name: commit-and-push-to-master
+      params:
+        - name: GIT_SCRIPT
+          value: |-
+            git config --global user.email "gitops-repo-deploy-pipeline@otp.local"
+            git config --global user.name "GitOps Repo Deploy pipeline"
+
+            # Remove current remote if available
+            rm -rf .git
+            git init
+            git add .
+            git commit -m "configure storage"
+            git remote add origin $(params.target-repo)
+            git push -u origin master
+        - name: USER_HOME
+          value: /root
+        - name: VERBOSE
+          value: 'true'
+      runAfter:
+        - set-up-storage
+      taskRef:
+        kind: ClusterTask
+        name: git-cli
+      workspaces:
+        - name: source
+          workspace: shared-data
+        - name: ssh-directory
+          workspace: git-cli-ssh-directory
+  workspaces:
+    - name: shared-data
+    - name: git-cli-ssh-directory
+
+    
