@@ -56,7 +56,8 @@ spec:
           value: |
             export CLUSTER_DEPLOYMENT=$(oc get clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) -o=jsonpath='{.spec.namespace}')
             
-            # Configure storage            
+            # Configure storage          
+            platform=$(params.cloud-provider)  
             ocpversion=$(oc get clusterdeployments.hive.openshift.io $CLUSTER_DEPLOYMENT -n $CLUSTER_DEPLOYMENT -o=jsonpath='{.status.installVersion}')
             a=( ${ocpversion//./ } )
             majorVer="${a[0]}.${a[1]}"
