@@ -112,7 +112,7 @@ spec:
         - name: VERBOSE
           value: 'true'
       runAfter:
-        - set-up-storage
+        - set-up-bootstrap
       taskRef:
         kind: ClusterTask
         name: git-cli
