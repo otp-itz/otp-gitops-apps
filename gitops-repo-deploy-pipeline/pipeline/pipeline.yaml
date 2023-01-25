@@ -32,6 +32,8 @@ spec:
             done
             oc wait clusterclaims.hive.openshift.io -n rhacm-clusterpools $(params.cluster-claim-name) --for condition=ClusterRunning --timeout=2h
     - name: clone-bare-gitops-repo
+      runAfter:
+      - wait-for-cluster-to-be-ready
       params:
         - name: url
           value: $(params.source-repo)
