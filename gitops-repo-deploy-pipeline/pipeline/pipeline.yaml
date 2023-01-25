@@ -45,7 +45,7 @@ spec:
           workspace: shared-data
         - name: ssh-directory
           workspace: git-cli-ssh-directory
-    - name: set-up-storage
+    - name: set-up-bootstrap
       runAfter:
         - clone-bare-gitops-repo
       taskRef:
@@ -87,6 +87,9 @@ spec:
             sed -i.bak "s#\${CHANNEL}#${newChannel}#" argocd/storage.yaml
             sed -i.bak "s#\${STORCLASS}#${storageClass}#" argocd/storage.yaml
             rm argocd/storage.yaml.bak
+
+            # Configure sources
+            sed -i -e 's/$TARGET_REPO/$(params.target-repo)/g' $(find . -type f)
       workspaces:
         - name: manifest-dir
           workspace: shared-data
