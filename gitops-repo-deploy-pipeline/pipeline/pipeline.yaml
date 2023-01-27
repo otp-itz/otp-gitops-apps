@@ -89,7 +89,8 @@ spec:
             rm argocd/storage.yaml.bak
 
             # Configure sources
-            sed -i -e "s#\${TARGET_REPO}#$(params.target-repo)#" kustomization.yaml
+            cd ..
+            sed -i "s#\${TARGET_REPO}#$(params.target-repo)#" kustomization.yaml
       workspaces:
         - name: manifest-dir
           workspace: shared-data
