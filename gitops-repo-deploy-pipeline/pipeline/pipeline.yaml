@@ -63,18 +63,20 @@ spec:
 
             newChannel="stable-${majorVer}"
             platform=$(oc get clusterdeployments.hive.openshift.io $CLUSTER_DEPLOYMENT -n $CLUSTER_DEPLOYMENT -o=jsonpath='{.metadata.labels.hive\.openshift\.io\/cluster-platform}')
+            echo "Platform: $platform"
             defsc="unknown"
             if [[ "$platform" == "aws" ]]; then
-                storageClass=${defsc:-"gp2"}
+                storageClass="gp2"
                 elif [[ "$platform" == "azure" ]]; then
-                storageClass=${defsc:-"managed-premium"}
+                storageClass="managed-premium"
                 elif [[ "$platform" == "gcp" ]]; then
-                storageClass=${defsc:-"standard"}
+                storageClass="standard"
                 elif [[ "$platform" == "ibmcloud" ]]; then
-                storageClass=${defsc:-"ibmc-vpc-block-10iops-tier"}
+                storageClass="ibmc-vpc-block-10iops-tier"
                 elif [[ "$platform" == "vsphere" ]]; then
-                storageClass=${defsc:-"thin"}
+                storageClass="thin"
             fi
+            echo "storage class: $storageClass"
 
             if echo $majorVer | grep -E '4.[6-8]' > /dev/null ; then
                 storageChart="ocs-operator"
@@ -90,7 +92,9 @@ spec:
 
             # Configure sources
             cd ..
-            sed -i "s#\${TARGET_REPO}#$(params.target-repo)#" kustomization.yaml
+            sed -i.bak "s#\${TARGET_REPO}#$(params.target-repo)#" kustomization.yaml
+            rm kustomization.yaml.bak
+            cat kustomization.yaml
       workspaces:
         - name: manifest-dir
           workspace: shared-data
