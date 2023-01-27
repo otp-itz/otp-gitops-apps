@@ -63,7 +63,7 @@ spec:
 
             newChannel="stable-${majorVer}"
             platform=$(oc get clusterdeployments.hive.openshift.io $CLUSTER_DEPLOYMENT -n $CLUSTER_DEPLOYMENT -o=jsonpath='{.metadata.labels.hive\.openshift\.io\/cluster-platform}')
-            defsc="managed-premium"
+            defsc="unknown"
             if [[ "$platform" == "aws" ]]; then
                 storageClass=${defsc:-"gp2"}
                 elif [[ "$platform" == "azure" ]]; then
