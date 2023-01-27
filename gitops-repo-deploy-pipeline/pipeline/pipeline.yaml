@@ -92,9 +92,9 @@ spec:
 
             # Configure sources
             cd ..
+            echo " "
             echo "root kustomization.yaml content:"
-            targetRepo="$(params.target-repo)"
-            sed -i.bak "s#\${TARGET_REPO}#${targetRepo}#" kustomization.yaml
+            sed -i.bak "s#\$TARGET_REPO#$(params.target-repo)#" kustomization.yaml
             rm kustomization.yaml.bak
             cat kustomization.yaml
       workspaces:
