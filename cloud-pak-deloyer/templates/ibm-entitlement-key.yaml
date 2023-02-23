@@ -1,0 +1,22 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: cloud-pak-entitlement-key
+  namespace: cloud-pak-deployer
+spec:
+  data:
+    - secretKey: cp-entitlement-key
+      remoteRef:
+        key: 88671bfc-14d4-29ad-ab9b-950eaac3808f
+  refreshInterval: 24h0m0s
+  secretStoreRef:
+    name: cluster
+    kind: ClusterSecretStore
+  target:
+    name: cloud-pak-entitlement-key
+    creationPolicy: Owner
+    template:
+      type: Opaque
+      data:
+        cp-entitlement-key: |-
+          {{ "{{ .cp-entitlement-key | toString }}" }}

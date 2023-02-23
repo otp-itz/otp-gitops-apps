@@ -1,0 +1,196 @@
+ocpVersion: 4.10
+projectName: cpd-instance
+clusterName: cluster-name
+domainName: cluster-name.com
+configYaml: |
+  ---
+  global_config:
+    cloud_platform: existing-ocp
+    env_id: test-cpd-cluster
+    environment_name: sample
+  openshift:
+  - cluster_name: '{{ env_id }}'
+    domain_name: example.com
+    name: '{{ env_id }}'
+    ocp_version: '4.8'
+    openshift_storage:
+    - storage_name: auto-storage
+      storage_type: auto
+
+  cp4d:
+  - accept_licenses: true
+    cartridges:
+    - license_service:
+        state: disabled
+        threads_per_core: 2
+      name: cp-foundation
+    - name: lite
+    - description: Analytics Engine Powered by Apache Spark
+      name: analyticsengine
+      size: small
+      state: installed
+    - description: Db2 Big SQL
+      name: bigsql
+      state: removed
+    - description: Cognos Analytics
+      instances:
+      - metastore_ref: ca-metastore
+        name: ca-instance
+      name: ca
+      size: small
+      state: removed
+    - description: Cognos Dashboards
+      name: cde
+      state: removed
+    - description: Db2 Data Gate
+      name: datagate
+      state: removed
+    - description: DataStage Enterprise Plus
+      name: datastage-ent-plus
+      state: removed
+    - description: Db2 OLTP
+      instances:
+      - backup_size_gb: 20
+        data_size_gb: 20
+        metadata_size_gb: 20
+        name: ca-metastore
+        transactionlog_size_gb: 20
+      name: db2
+      size: small
+      state: removed
+    - description: Db2 Warehouse
+      name: db2wh
+      state: removed
+    - description: Db2 Data Management Console
+      name: dmc
+      state: installed
+    - description: Decision Optimization
+      name: dods
+      size: small
+      state: removed
+    - description: Data Privacy
+      name: dp
+      size: small
+      state: installed
+    - description: Data Virtualization
+      instances:
+      - name: data-virtualization
+      name: dv
+      size: small
+      state: removed
+    - description: AI Factsheets
+      name: factsheet
+      size: small
+      state: removed
+    - description: Execution Engine for Apache Hadoop
+      name: hadoop
+      size: small
+      state: removed
+    - description: Match360
+      name: match360
+      size: small
+      state: removed
+      wkc_enabled: true
+    - description: OpenPages
+      name: openpages
+      state: removed
+    - description: Planning Analytics
+      name: planning-analytics
+      state: removed
+    - description: Data Replication
+      license: IDRC
+      name: replication
+      state: removed
+    - description: RStudio Server with R 3.6
+      name: rstudio
+      size: small
+      state: removed
+    - description: SPSS Modeler
+      name: spss
+      state: removed
+    - description: Voice Gateway
+      name: voice-gateway
+      replicas: 1
+      state: removed
+    - description: Watson Assistant
+      name: watson-assistant
+      size: small
+      state: removed
+    - description: Watson Discovery
+      name: watson-discovery
+      state: removed
+    - description: Watson Knowledge Studio
+      name: watson-ks
+      size: small
+      state: removed
+    - description: Watson OpenScale
+      name: watson-openscale
+      size: small
+      state: installed
+    - description: Watson Speech (STT and TTS)
+      name: watson-speech
+      state: removed
+      stt_size: xsmall
+      tts_size: xsmall
+    - description: Watson Knowledge Catalog
+      name: wkc
+      size: small
+      state: removed
+    - description: Watson Machine Learning
+      name: wml
+      size: small
+      state: removed
+    - description: Watson Machine Learning Accelerator
+      name: wml-accelerator
+      replicas: 1
+      size: small
+      state: removed
+    - description: Watson Studio
+      name: wsl
+      state: removed
+    - description: Watson Studio Pipelines
+      name: ws-pipelines
+      state: installed
+    cp4d_version: 4.6.2
+    openshift_cluster_name: '{{ env_id }}'
+    project: cpd-instance
+
+  cp4i:
+  - accept_licenses: true
+    cp4i_version: 2022.2.1-0
+    instances:
+    - description: Platform Navigator
+      state: removed
+      type: platform-navigator
+    - description: API Management
+      state: removed
+      type: api-management
+    - description: Automation Assets
+      state: removed
+      type: automation-assets
+    - description: Enterprise Gatway
+      state: removed
+      type: enterprise-gateway
+    - description: Event Endpoint Management
+      state: installed
+      type: event-endpoint-management
+    - description: Event Streams
+      state: installed
+      type: event-streams
+    - description: High Speed Transfer Server
+      state: removed
+      type: high-speed-transfer-server
+    - description: Integration Dashboard
+      state: installed
+      type: integration-dashboard
+    - description: Integration Design
+      state: installed
+      type: integration-design
+    - description: Integration Tracing
+      state: installed
+      type: integration-tracing
+    - description: Messaging
+      state: installed
+      type: messaging
+    openshift_cluster_name: '{{ env_id }}'
+    project: cp4i
