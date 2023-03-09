@@ -6,19 +6,14 @@ spec:
   params:
   - description: File content to be written (YAML)
     name: content
-    type: string
   - description: Entity's kind to be created
     name: entity-kind
-    type: string
   - description: Entity's namespace to be created
     name: entity-namespace
-    type: string
   - description: Entity's name to be created
     name: entity-name
-    type: string
   - description: CloudEvent processor
     name: cloudevent-sink
-    type: string
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
