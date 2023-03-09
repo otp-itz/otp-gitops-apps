@@ -58,4 +58,4 @@ spec:
             volumeMode: Filesystem
       - name: ssh-directory
         secret:
-          secretName: ghe-ssh-credentials
+          secretName: ssh-creds
