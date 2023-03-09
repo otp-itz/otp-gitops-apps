@@ -1,0 +1,176 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-backstage-entity-create
+spec:
+  finally:
+    - name: cloudevent
+      params:
+        - name: sink
+          value: >-
+            $(params.cloudevent-sink)
+        - name: eventID
+          value: 'pipeline-backstage.entity-create'
+        - name: eventType
+          value: tekton.cloudevent.message
+        - name: source
+          value: pipeline-backstage-entity-create
+        - name: data
+          value: '{ "pull-request-url": "$(tasks.github-open-pr.results.URL)" }'
+      taskRef:
+        kind: Task
+        name: cloudevent
+  params:
+    - description: Target repository
+      name: target-repo
+      type: string
+    - description: File content to be written (YAML)
+      name: content
+      type: string
+    - default: api.github.com
+      description: GitHub API host
+      name: repo-github-api-host
+      type: string
+    - description: Repo full name (org/repo)
+      name: repo-name
+      type: string
+    - description: Entity's kind to be created
+      name: entity-kind
+      type: string
+    - description: Entity's namespace to be created
+      name: entity-namespace
+      type: string
+    - description: Entity's name to be created
+      name: entity-name
+      type: string
+    - default: Backstage
+      description: Git config user.name
+      name: git-config-username
+      type: string
+    - default: pipeline@catalog.local
+      description: Git config email
+      name: git-config-email
+      type: string
+    - default: github-token
+      description: GitHub Personal Access Token secret name
+      name: git-pat-secret-name
+      type: string
+    - description: CloudEvent processor
+      name: cloudevent-sink
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: $(params.target-repo)
+        - name: submodules
+          value: 'true'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: crtFileName
+          value: ca-bundle.crt
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:6c3980b3d28c8fb92b17466f5654d5f484ab893f1673ec8f29e49c0d03f8aca9
+        - name: userHome
+          value: /tekton/home
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: git-output
+        - name: ssh-directory
+          workspace: ssh-directory
+    - name: write-file
+      params:
+        - name: path
+          value: >-
+            $(params.entity-kind)s/$(params.entity-namespace)-$(params.entity-name).yaml
+        - name: contents
+          value: $(params.content)
+        - name: mode
+          value: '0755'
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: write-file
+      workspaces:
+        - name: output
+          workspace: git-output
+    - name: github-open-pr
+      params:
+        - name: GITHUB_HOST_URL
+          value: $(params.repo-github-api-host)
+        - name: REPO_FULL_NAME
+          value: $(params.repo-name)
+        - name: GITHUB_TOKEN_SECRET_NAME
+          value: $(params.git-pat-secret-name)
+        - name: GITHUB_TOKEN_SECRET_KEY
+          value: token
+        - name: AUTH_TYPE
+          value: Bearer
+        - name: HEAD
+          value: >-
+            $(params.entity-kind)/$(params.entity-namespace)/$(params.entity-name)
+        - name: BASE
+          value: main
+        - name: BODY
+          value: >-
+            Adding
+            $(params.entity-kind):$(params.entity-namespace)/$(params.entity-name)
+        - name: TITLE
+          value: >-
+            Adding
+            $(params.entity-kind):$(params.entity-namespace)/$(params.entity-name)
+      runAfter:
+        - git-cli
+      taskRef:
+        kind: Task
+        name: github-open-pr
+    - name: git-cli
+      params:
+        - name: BASE_IMAGE
+          value: >-
+            docker.io/alpine/git:v2.26.2@sha256:23618034b0be9205d9cc0846eb711b12ba4c9b468efdd8a59aac1d7b1a23363f
+        - name: GIT_SCRIPT
+          value: >-
+            git config --global user.email "$(params.git-config-email)"
+
+            git config --global user.name "$(params.git-config-username)"
+
+            export
+            BRANCH="$(params.entity-kind)/$(params.entity-namespace)/$(params.entity-name)"
+
+            git checkout -b $BRANCH
+
+            git add .
+
+            git commit -m "adding
+            $(params.entity-kind):$(params.entity-namespace)/$(params.entity-name)"
+
+            git push --set-upstream origin $BRANCH
+        - name: USER_HOME
+          value: /root
+        - name: VERBOSE
+          value: 'true'
+      runAfter:
+        - write-file
+      taskRef:
+        kind: ClusterTask
+        name: git-cli
+      workspaces:
+        - name: source
+          workspace: git-output
+        - name: ssh-directory
+          workspace: ssh-directory
+  workspaces:
+    - name: git-output
+    - name: ssh-directory

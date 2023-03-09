@@ -1,7 +1,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: machinepool-clusterclaim
+  name: backstage-pr-event-listener-route
 spec:
   port:
     # targets http-listener
@@ -9,7 +9,7 @@ spec:
   to:
     kind: Service
     # generated name by default
-    name: el-machinepool-clusterclaim
+    name: el-backstage-pr-event-listener
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: None 

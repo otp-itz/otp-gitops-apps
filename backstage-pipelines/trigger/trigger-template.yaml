@@ -1,0 +1,83 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: backstage-pr-trigger-template
+spec:
+  params:
+  - description: Target repository
+    name: target-repo
+    type: string
+    default: git@github.ibm.com:skol/backstage-catalog.git
+  - description: File content to be written (YAML)
+    name: content
+    type: string
+  - description: GitHub API host
+    name: repo-github-api-host
+    type: string
+    default: api.github.ibm.com
+  - name: repo-name
+    type: string
+    description: Repo full name (org/repo)
+    default: skol/backstage-catalog
+  - description: Entity's kind to be created
+    name: entity-kind
+    type: string
+  - description: Entity's namespace to be created
+    name: entity-namespace
+    type: string
+  - description: Entity's name to be created
+    name: entity-name
+    type: string
+  - description: Git config user.name
+    name: git-config-username
+    type: string
+    default: 'Backstage'
+  - description: Git config email
+    name: git-config-email
+    type: string
+    default: 'pipeline@catalog.local'
+  - description: GitHub Personal Access Token secret name
+    name: git-pat-secret-name
+    type: string
+    default: ghe-token
+  - description: Callback code to verify authenticity
+    name: callback-code 
+    type: string
+  - description: CloudEvent processor
+    name: cloudevent-sink
+    type: string
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: pipeline-run-backstage-entity-create-
+    spec:
+      pipelineRef:
+        name: pipeline-backstage-entity-create
+      params:
+      - name: entity-kind
+        value: $(tt.params.entity-kind)
+      - name: entity-namespace
+        value: $(tt.params.entity-namespace)
+      - name: entity-name
+        value: $(tt.params.entity-name)
+      - name: content
+        value: $(tt.params.content)
+      - name: cloudevent-sink
+        value: $(tt.params.cloudevent-sink)
+      serviceAccountName: pipeline
+      timeout: 1h0m0s
+      workspaces:
+      - name: git-output
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 10Mi
+            storageClassName: ocs-storagecluster-cephfs
+            volumeMode: Filesystem
+      - name: ssh-directory
+        secret:
+          secretName: ghe-ssh-credentials

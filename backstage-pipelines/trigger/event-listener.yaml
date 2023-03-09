@@ -2,11 +2,11 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: machinepool-clusterclaim
+  name: backstage-pr-event-listener
 spec:
   serviceAccountName: pipeline
   triggers:
     - bindings:
-        - ref: machinepool-for-clusterclaim-trigger-binding
+        - ref: backstage-pr-trigger-binding
       template:
-        ref: machinepool-for-clusterclaim-trigger-template
+        ref: backstage-pr-trigger-template

@@ -1,0 +1,16 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: backstage-pr-trigger-binding
+spec:
+  params:
+  - name: entity-kind
+    value: $(body.data.entity_kind)
+  - name: entity-namespace
+    value: $(body.data.entity_namespace)
+  - name: entity-name
+    value: $(body.data.entity_name)
+  - name: content
+    value: $(body.data.content)
+  - name: cloudevent-sink
+    value: $(body.data.cloudevent_sink)
