@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  annotations:
+    tekton.dev/categories: Networking
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: cloud
+  name: cloudevent
+  labels:
+    app.kubernetes.io/version: '0.1'
+spec:
+  description: This Task send a single CloudEvent to a specified sink.
+  params:
+    - description: Sink to send Event to
+      name: sink
+      type: string
+    - description: Event ID to use
+      name: eventID
+      type: string
+    - default: tekton.cloudevent.message
+      description: The Event Type to use
+      name: eventType
+      type: string
+    - default: ''
+      description: Source of the CloudEvent
+      name: source
+      type: string
+    - default: ''
+      description: The payload of the Event
+      name: data
+      type: string
+  steps:
+    - args:
+        - '--event-id=$(params.eventID)'
+        - '--event-type=$(params.eventType)'
+        - '--source=$(params.source)'
+        - '--data=$(params.data)'
+        - $(params.sink)
+      command:
+        - sendevent
+      image: >-
+        docker.io/iancoffey/sendevent-89c3de01c503ceb66b676a3e41c265ed@sha256:fc39998cba7ad8e54323b948b56b11b0b235996069349fb74776865fedf182a5
+      name: send
+      resources: {}
