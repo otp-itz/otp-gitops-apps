@@ -2,6 +2,8 @@ apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: backstage-pr-trigger-template
+  annotations:
+    triggers.tekton.dev/old-escape-quotes: "true"
 spec:
   params:
   - description: File content to be written (YAML)
