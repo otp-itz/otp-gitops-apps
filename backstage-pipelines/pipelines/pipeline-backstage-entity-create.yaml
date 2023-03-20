@@ -92,7 +92,7 @@ spec:
       params:
         - name: path
           value: >-
-            $(params.entity-kind)s/$(params.entity-namespace)-$(params.entity-name).yaml
+            $(params.entity-kind)s/$(params.entity-namespace)/$(params.entity-name).yaml
         - name: contents
           value: $(params.content)
         - name: mode
